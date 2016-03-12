@@ -14,6 +14,7 @@ module.exports = (function () {
      * @description
      * Set routes.
      *
+     * @param {Object} router
      * @private
      */
     function _setRoutes (router) {
@@ -24,9 +25,20 @@ module.exports = (function () {
 
     /**
      * @description
+     * Set public API routes.
+     *
+     * @param {Object} router
+     * @private
+     */
+    function _setApi (router) {
+        require('./lib/api/api').init(router);
+    }
+
+    /**
+     * @description
      * Set middleware.
      *
-     * @param {Object} | app - express server.
+     * @param {Object} app
      * @private
      */
     function _setMiddleware (app) {
@@ -47,7 +59,7 @@ module.exports = (function () {
      * @description
      * Set view engine to EJS templating system.
      *
-     * @param {Object} app - express server.
+     * @param {Object} app
      * @private
      */
     function _setViewEngine (app) {
@@ -59,7 +71,7 @@ module.exports = (function () {
      * @description
      * Set middleware.
      *
-     * @param {Object} | app - express server.
+     * @param {Object} app
      * @return {Object}
      * @private
      */
@@ -88,8 +100,9 @@ module.exports = (function () {
 
     /**
      * @description
-     * Init.
+     * Init fn.
      *
+     * @return void
      * @public
      */
     function init () {
@@ -98,6 +111,7 @@ module.exports = (function () {
 
         _setMiddleware(app);
         _setViewEngine(app);
+        _setApi(router);
         _setRoutes(router);
         app.use('/', router);
         _setErrorHandler(app);
