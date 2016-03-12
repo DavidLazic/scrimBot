@@ -1,0 +1,89 @@
+#!/usr/bin/env node
+
+var app = require('../app');
+var http = require('http');
+var appService = require('../lib/app/app.service');
+var port = appService.normalizePort(process.env.PORT || '5000');
+
+(function () {
+    'use strict';
+
+    var Server = (function () {
+
+        /**
+         * @description
+         * Server constructor fn.
+         *
+         * @param {Object} params
+         * @public
+         */
+        function Server (params) {
+            this.app = params && params.app || null;
+            this.http = params && params.http || null;
+            this.appService = params && params.appService || null;
+            this.port = params && params.port || null;
+        };
+
+        /**
+         * @description
+         * Server init fn.
+         *
+         * @return {Object}
+         * @public
+         */
+        Server.prototype.init = function () {
+            var _this = this;
+            var server = null;
+
+            // create server
+            _this.app.set('port', _this.port);
+            server = _this.http.createServer(_this.app);
+            server.listen(_this.port);
+
+            server.on('error', function (error) {
+                _this.appService.onError.call(_this, error, _this.port);
+            });
+
+            server.on('listening', function () {
+                console.log('Started static file server ( path | http://localhost:' + _this.port + ' )');
+                console.log('Waiting ...');
+                _this.appService.onListening.call(_this, server);
+            });
+
+            return this;
+        };
+
+        /**
+         * @description
+         * Get new server instance.
+         *
+         * @return {Function<Object>}
+         * @public
+         */
+        function _getInstance () {
+            var server = new Server({
+                    app: app,
+                    http: http,
+                    appService: appService,
+                    port: port
+                });
+
+            return function () {
+                return server;
+            }().init();
+        }
+
+        /**
+         * @description
+         * Server module API.
+         *
+         * @return {Object}
+         * @public
+         */
+        return {
+            create: _getInstance
+        };
+    })();
+
+    return Server.create();
+})();

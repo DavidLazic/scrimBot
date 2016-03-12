@@ -1,0 +1,29 @@
+{
+  "name": "scrim",
+  "version": "0.0.1",
+  "description": "Image scraper",
+  "main": "app.js",
+  "scripts": {
+    "test": "npm test",
+    "start": "node ./bin/www",
+    "start:debug": "export DEBUG=true && node ./bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DavidLazic/scrIM.git"
+  },
+  "engines": {
+    "node": ">= 0.10.40",
+    "npm": ">= 2.14.4"
+  },
+  "author": "David Lazic",
+  "devDependencies": {
+    "body-parser": "^1.14.2",
+    "cookie-parser": "^1.4.1",
+    "ejs": "^2.4.1",
+    "express": "^4.13.4",
+    "mkdirp": "^0.5.1",
+    "request": "^2.69.0",
+    "zlibjs": "^0.2.0"
+  }
+}
