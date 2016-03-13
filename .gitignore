@@ -32,6 +32,16 @@ node_modules
 # Optional REPL history
 .node_repl_history
 
+# OSX
 .DS_Store
 
+# Distribution directory
 dist/*
+
+# Vendor
+src/vendor/*
+
+# Sass
+.sass-cache
+.temp
+.tmp

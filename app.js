@@ -1,4 +1,5 @@
 var express = require('express');
+var socket = require('socket.io')();
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
@@ -27,11 +28,13 @@ module.exports = (function () {
      * @description
      * Set public API routes.
      *
-     * @param {Object} router
+     * @param {Object} io
      * @private
      */
-    function _setApi (router) {
-        require('./lib/api/api').init(router);
+    function _setApi (io) {
+        io.on('connection', function (socket) {
+            require('./lib/api/api').init(socket);
+        });
     }
 
     /**
@@ -53,6 +56,8 @@ module.exports = (function () {
         app.use(bodyParser.urlencoded({ extended: false }));
         app.use(cookieParser());
         app.use(express.static(path.join(__dirname, 'src')));
+        app.use('/scripts', express.static(path.join(__dirname + '/.tmp/js/')));
+        app.use('/styles', express.static(path.join(__dirname + '/.tmp/css/')));
     }
 
     /**
@@ -63,7 +68,7 @@ module.exports = (function () {
      * @private
      */
     function _setViewEngine (app) {
-        app.set('views', path.join(__dirname, 'src/views'));
+        app.set('views', path.join(__dirname, 'src/templates'));
         app.set('view engine', 'ejs');
     }
 
@@ -109,9 +114,11 @@ module.exports = (function () {
         var app = express();
         var router = express.Router();
 
+        app.socket = socket;
+
         _setMiddleware(app);
         _setViewEngine(app);
-        _setApi(router);
+        _setApi(app.socket);
         _setRoutes(router);
         app.use('/', router);
         _setErrorHandler(app);

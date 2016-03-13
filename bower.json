@@ -1,0 +1,24 @@
+{
+  "name": "scrimBot",
+  "description": "Image scraper bot",
+  "main": "app.js",
+  "authors": [
+    "David Lazic"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/DavidLazic/scrimBot",
+  "moduleType": [
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/js/vendor",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "jquery": "~2.2.1"
+  }
+}

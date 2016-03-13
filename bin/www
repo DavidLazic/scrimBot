@@ -38,7 +38,6 @@ var port = appService.normalizePort(process.env.PORT || '5000');
             // create server
             _this.app.set('port', _this.port);
             server = _this.http.createServer(_this.app);
-            server.listen(_this.port);
 
             server.on('error', function (error) {
                 _this.appService.onError.call(_this, error, _this.port);
@@ -49,6 +48,9 @@ var port = appService.normalizePort(process.env.PORT || '5000');
                 console.log('Waiting ...');
                 _this.appService.onListening.call(_this, server);
             });
+
+            _this.app.socket.attach(server);
+            server.listen(_this.port);
 
             return this;
         };
