@@ -3,7 +3,7 @@
 ### Description
 Image scraper bot.
 
-![scrimBot](/screenshots/img.png?raw=true "scrimBot")
+![scrimBot](/screenshots/scrimBot.png "scrimBot")
 
 ### Local setup
 
