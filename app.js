@@ -3,10 +3,11 @@ var socket = require('socket.io')();
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var debug = require('./lib/debug/debug.js');
+var debug = require('./lib/debug/debug');
 var ejs = require('ejs');
 
 var ROUTES = require('./config/routes/routes.cfg');
+var APIS = require('./config/api/api.cfg');
 
 module.exports = (function () {
     'use strict';
@@ -19,8 +20,8 @@ module.exports = (function () {
      * @private
      */
     function _setRoutes (router) {
-        ROUTES.forEach(function (route) {
-            require('./lib/modules/' + route + '/' + route).init(router);
+        ROUTES.forEach(function (slug) {
+            require('./lib/modules/' + slug + '/' + slug).init(router);
         });
     }
 
@@ -31,9 +32,11 @@ module.exports = (function () {
      * @param {Object} io
      * @private
      */
-    function _setApi (io) {
+    function _setApis (io) {
         io.on('connection', function (socket) {
-            require('./lib/api/api').init(socket);
+            APIS.forEach(function (slug) {
+                require('./lib/api/' + slug + '/' + slug).init(socket);
+            });
         });
     }
 
@@ -118,7 +121,7 @@ module.exports = (function () {
 
         _setMiddleware(app);
         _setViewEngine(app);
-        _setApi(app.socket);
+        _setApis(app.socket);
         _setRoutes(router);
         app.use('/', router);
         _setErrorHandler(app);

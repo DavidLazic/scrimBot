@@ -12,6 +12,7 @@
     "camelcase"      : true,
     "curly"          : false,
     "eqeqeq"         : true,
+    "expr"           : true,
     "eqnull"         : true,
     "forin"          : true,
     "indent"         : 4,

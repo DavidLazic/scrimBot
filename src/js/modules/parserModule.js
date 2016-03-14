@@ -3,8 +3,9 @@
 
     // Parser config and DOM bindings
     var PARSER_CFG = {
-            input: $('.js-io'),
+            url: $('.js-io'),
             btn: $('.js-dl'),
+            total: $('.js-total'),
             progress: $('.js-progress')
         };
 
@@ -30,9 +31,11 @@
          */
         function Parser (params) {
             this.url = '';
+            this.total = 0;
             this.el = {
                 btn: params.btn || null,
-                input: params.input || null,
+                url: params.url || null,
+                total: params.total || null,
                 progress: params.progress || null
             };
         }
@@ -80,8 +83,7 @@
             var _this = this;
 
             __super.$document.on('click', '.js-dl', _this._dlRequest.bind(_this));
-
-            this.el.input.on('change', function () {
+            __super.$document.on('change', '.loader__input', function () {
                 _this._onChange.call(_this, $(this));
             });
 
@@ -136,7 +138,8 @@
             var _this = this;
             var value = ctx.val();
 
-            _this._setUrl.call(_this, value);
+
+            (ctx.data('url')) ? _this._setUrl.call(_this, value) : _this._setTotal.call(_this, value);
             return (!!value) ? ctx.addClass('filled') : ctx.removeClass('filled');
         };
 
@@ -166,6 +169,17 @@
 
         /**
          * @description
+         * Update parser's total count.
+         *
+         * @param {Integer} total
+         * @private
+         */
+        Parser.prototype._setTotal = function (total) {
+            this.total = (total.match(/^\d+$/)) ? total : 1;
+        };
+
+        /**
+         * @description
          * Send socket request.
          *
          * @return {Function}
@@ -173,7 +187,7 @@
          */
         Parser.prototype._dlRequest = function () {
             this.el.btn.prop('disabled', true);
-            return this.url && SocketService.broadcast('api.chapter', this.url);
+            return this.url && SocketService.broadcast('api.chapter', {url: this.url, total: this.total});
         };
 
         /**

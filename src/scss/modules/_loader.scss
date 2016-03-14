@@ -4,9 +4,26 @@
     max-width: 600px;
     text-align: center;
 
+    > form {
+        @include clearfix();
+    }
+
     &__input-wrapper {
         position: relative;
         margin: 0 0 30px;
+        float: left;
+
+        &--url {
+            width: calc(100% - 135px;)
+        }
+
+        &--total {
+            width: 120px;
+        }
+
+        &+& {
+            margin-left: 15px;
+        }
     }
 
     &__input {

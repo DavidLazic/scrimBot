@@ -1,7 +1,7 @@
 ## scrimBot
 
 ### Description
-Image scraper bot.
+When torrents aren\'t an option, bring it ON =).
 
 ![scrimBot](/screenshots/scrimBot.png "scrimBot")
 
@@ -28,7 +28,7 @@ $npm install && bower install
 $grunt serve
 ````
 
-Access the application on  [http://localhost:5000/](http://localhost:5000/)
+Access the application on [http://localhost:5000/](http://localhost:5000/)
 
 ### Production build
 ````shell
