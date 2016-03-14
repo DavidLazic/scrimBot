@@ -1,7 +1,7 @@
 ## scrimBot
 
 ### Description
-When torrents aren\'t an option, bring it ON =).
+When torrents aren't an option, bring it ON =).
 
 ![scrimBot](/screenshots/scrimBot.png "scrimBot")
 
