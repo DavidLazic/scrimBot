@@ -20,11 +20,11 @@
 
         <% } %>
 
-
+        <div class="loader__progress js-progress" data-current="" data-chapter=""></div>
 
         <button class="loader__btn <%= submit.bind %>" type="button">
             <div class="loader__btn-text"><%= submit.label %></div>
-            <span class="loader__btn-progress js-progress" style="width: 0%"></span>
+            <span class="loader__btn-progress js-progress-bar" style="width: 0%"></span>
         </button>
     </form>
 </div>

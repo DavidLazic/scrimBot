@@ -6,7 +6,8 @@
             url: $('.js-io'),
             btn: $('.js-dl'),
             total: $('.js-total'),
-            progress: $('.js-progress')
+            progress: $('.js-progress'),
+            progressBar: $('.js-progress-bar')
         };
 
     /**
@@ -36,7 +37,8 @@
                 btn: params.btn || null,
                 url: params.url || null,
                 total: params.total || null,
-                progress: params.progress || null
+                progress: params.progress || null,
+                progressBar: params.progressBar || null
             };
         }
 
@@ -111,7 +113,10 @@
          * @private
          */
         Parser.prototype._onProgress = function (response) {
-            this.el.progress.css('width', response + '%');
+            this.el.progress
+                .attr('data-current', response.current + '/' + response.total)
+                .attr('data-chapter', response.chapter + '/' + response.max);
+            this.el.progressBar.css('width', response.progress + '%');
         };
 
         /**
@@ -151,7 +156,8 @@
          * @private
          */
         Parser.prototype._resetLoader = function () {
-            this.el.progress.css('width', '0%');
+            this.el.progress.removeClass('active');
+            this.el.progressBar.css('width', '0%');
             this.el.btn.prop('disabled', false);
             return this;
         };
@@ -186,6 +192,7 @@
          * @private
          */
         Parser.prototype._dlRequest = function () {
+            this.el.progress.addClass('active');
             this.el.btn.prop('disabled', true);
             return this.url && SocketService.broadcast('api.chapter', {url: this.url, total: this.total});
         };

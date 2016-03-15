@@ -99,6 +99,37 @@
         }
     }
 
+    &__progress {
+        @include transition(all, 0.3s, ease);
+        position: relative;
+        margin-bottom: 10px;
+        height: 30px;
+        line-height: 30px;
+        opacity: 0;
+        clear: both;
+
+        &:before,
+        &:after {
+            position: absolute;
+            left: 50%;
+            width: 120px;
+        }
+
+        &:before {
+            transform: translateX(-120px);
+            -webkit-transform: translateX(-120px);
+            content: attr(data-current);
+        }
+
+        &:after {
+            content: attr(data-chapter);
+        }
+
+        &.active {
+            opacity: 1;
+        }
+    }
+
     &__btn {
         @include transition(all, 0.3s, ease);
         position: relative;
