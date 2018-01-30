@@ -1,0 +1,13 @@
+node_modules/
+server/npm-debug.log
+server/credentials.js
+.vscode/launch.json
+.idea/*
+.vscode
+.idea/*
+*npm-debug.log
+package-lock.json
+.DS_Store
+.vagrant/
+dist/
+app/config/index.js
