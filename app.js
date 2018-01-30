@@ -1,141 +1,44 @@
-var express = require('express');
-var socket = require('socket.io')();
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var debug = require('./lib/debug/debug');
-var ejs = require('ejs');
+const express = require('express');
+const logger = require('morgan');
+const path = require('path');
+const bodyParser = require('body-parser');
+const webpack = require('webpack');
+const webpackDevMiddleware = require('webpack-dev-middleware');
+const socket = require('socket.io')();
 
-var ROUTES = require('./config/routes/routes.cfg');
-var APIS = require('./config/api/api.cfg');
+const app = express();
 
-module.exports = (function () {
-    'use strict';
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 
-    /**
-     * @description
-     * Set routes.
-     *
-     * @param {Object} router
-     * @private
-     */
-    function _setRoutes (router) {
-        ROUTES.forEach(function (slug) {
-            require('./lib/modules/' + slug + '/' + slug).init(router);
-        });
-    }
+app.use(logger('dev'));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
-    /**
-     * @description
-     * Set public API routes.
-     *
-     * @param {Object} io
-     * @private
-     */
-    function _setApis (io) {
-        io.on('connection', function (socket) {
-            APIS.forEach(function (slug) {
-                require('./lib/api/' + slug + '/' + slug).init(socket);
-            });
-        });
-    }
+app.use('/dist', express.static(path.join(__dirname, 'dist')));
 
-    /**
-     * @description
-     * Set middleware.
-     *
-     * @param {Object} app
-     * @private
-     */
-    function _setMiddleware (app) {
-        app.use(function (req, res, next) {
-            debug.log('route', req);
-            res.header('Access-Control-Allow-Origin', 'http://localhost:5000');
-            res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
-            res.header('Access-Control-Allow-Headers', 'Content-Type');
-            next();
-        });
-        app.use(bodyParser.json());
-        app.use(bodyParser.urlencoded({ extended: false }));
-        app.use(cookieParser());
-        app.use(express.static(path.join(__dirname, 'src')));
-        app.use('/scripts', express.static(path.join(__dirname + '/.tmp/js/')));
-        app.use('/styles', express.static(path.join(__dirname + '/.tmp/css/')));
-    }
+if (process.env.NODE_ENV === 'local') {
+    const webpackConfig = require(`./webpack.config.${process.env.NODE_ENV}.js`);
+    const compiler = webpack(webpackConfig);
 
-    /**
-     * @description
-     * Set view engine to EJS templating system.
-     *
-     * @param {Object} app
-     * @private
-     */
-    function _setViewEngine (app) {
-        app.set('views', path.join(__dirname, 'src/templates'));
-        app.set('view engine', 'ejs');
-    }
+    app.use(webpackDevMiddleware(compiler, {
+        publicPath: '/dist/'
+    }));
+}
 
-    /**
-     * @description
-     * Set middleware.
-     *
-     * @param {Object} app
-     * @return {Object}
-     * @private
-     */
-    function _setErrorHandler (app) {
+require('./routes')(app);
 
-        // catch 404 and forward to error handler
-        app.use(function (req, res, next) {
-            debug.error('route', {
-                method: '_setErrorHandler',
-                error: 404
-            });
-            var err = new Error('Not found.');
-            err.status = 404;
-            next(err);
-        });
+// catch 404 and forward to error handler
+app.use((req, res, next) => next({ message: 'Not Found', status: 404 }));
 
-        // error handler
-        app.use(function(err, req, res, next) {
-            res.status(err.status || 500);
-            res.send({
-                message: 'error',
-                status: err.status
-            });
-        });
-    }
+// error handler
+app.use((err, req, res, next) => {
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'develop' ? err : {};
 
-    /**
-     * @description
-     * Init fn.
-     *
-     * @return void
-     * @public
-     */
-    function init () {
-        var app = express();
-        var router = express.Router();
+    res.status(err.status || 500);
+    res.json({ error: err.message });
+});
 
-        app.socket = socket;
-
-        _setMiddleware(app);
-        _setViewEngine(app);
-        _setApis(app.socket);
-        _setRoutes(router);
-        app.use('/', router);
-        _setErrorHandler(app);
-
-        return app;
-    }
-
-    /**
-     * @description
-     * App module API.
-     *
-     * @public
-     */
-    return {
-        init: init
-    };
-})().init();
+module.exports = app;

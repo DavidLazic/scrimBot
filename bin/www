@@ -1,91 +1,62 @@
 #!/usr/bin/env node
 
-var app = require('../app');
-var http = require('http');
-var appService = require('../lib/app/app.service');
-var port = appService.normalizePort(process.env.PORT || '5000');
+const app = require('../app');
+const debug = require('debug')('scrimBot:server');
+const http = require('http');
 
-(function () {
-    'use strict';
+const port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
 
-    var Server = (function () {
 
-        /**
-         * @description
-         * Server constructor fn.
-         *
-         * @param {Object} params
-         * @public
-         */
-        function Server (params) {
-            this.app = params && params.app || null;
-            this.http = params && params.http || null;
-            this.appService = params && params.appService || null;
-            this.port = params && params.port || null;
-        };
+const Socket = require('../lib/socket');
+const server = http.createServer(app);
 
-        /**
-         * @description
-         * Server init fn.
-         *
-         * @return {Object}
-         * @public
-         */
-        Server.prototype.init = function () {
-            var _this = this;
-            var server = null;
+server.on('error', onError);
+server.on('listening', () => console.log(`Running scrimBot on: ( http://localhost: ${port} )`));
 
-            // create server
-            _this.app.set('port', _this.port);
-            server = _this.http.createServer(_this.app);
+Socket.connect()
+    .then(socket => {
+        require('../refs')(socket);
+        return console.log('Socket connected');
+    })
+    .then(() => server.listen(port));
 
-            server.on('error', function (error) {
-                _this.appService.onError.call(_this, error, _this.port);
-            });
+function normalizePort (val) {
+    const port = parseInt(val, 10);
 
-            server.on('listening', function () {
-                console.log('Started static file server ( path | http://localhost:' + _this.port + ' )');
-                console.log('Waiting ...');
-                _this.appService.onListening.call(_this, server);
-            });
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
 
-            _this.app.socket.attach(server);
-            server.listen(_this.port);
+    if (port >= 0) {
+        // port number
+        return port;
+    }
 
-            return this;
-        };
+    return false;
+}
 
-        /**
-         * @description
-         * Get new server instance.
-         *
-         * @return {Function<Object>}
-         * @public
-         */
-        function _getInstance () {
-            var server = new Server({
-                    app: app,
-                    http: http,
-                    appService: appService,
-                    port: port
-                });
+function onError (error) {
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
 
-            return function () {
-                return server;
-            }().init();
-        }
+    const bind = typeof port === 'string'
+        ? 'Pipe ' + port
+        : 'Port ' + port;
 
-        /**
-         * @description
-         * Server module API.
-         *
-         * @return {Object}
-         * @public
-         */
-        return {
-            create: _getInstance
-        };
-    })();
-
-    return Server.create();
-})();
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
+}

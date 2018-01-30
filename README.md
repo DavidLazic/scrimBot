@@ -7,30 +7,23 @@ When torrents aren't an option, bring it ON =).
 
 ### Local setup
 
-#### Install NodeJS
-Download specific OS installation from [http://nodejs.org/download/](http://nodejs.org/download/).
+Global packages:
+- [`nodemon`](https://github.com/remy/nodemon)
+- [`node (verion 7 or higher)`](https://nodejs.org/en/download/package-manager/)
 
-#### Install project dependencies
+```javascript
+$ npm install
+```
 
-````shell
-$npm install -g grunt-cli
-$npm install -g bower
-````
+## Environment tasks
 
-#### Install application dependencies
-Go to the project's root folder and run:
-````shell
-$npm install && bower install
-````
+| Environment | Command           | Description |
+| ----------- |:-----------------:| ----------- |
+| Local       | **npm run local** | Run local Node with hot reloading enabled.
 
-### Running the application in development mode
-````shell
-$grunt serve
-````
 
-Access the application on [http://localhost:5000/](http://localhost:5000/)
+#### Other tasks
 
-### Production build
-````shell
-$grunt build
-````
+| Task    | Command             | Description |
+| ------- |:-------------------:| ----------- |
+| ESLint  | **npm run lint**    | Run ES6 error linter.

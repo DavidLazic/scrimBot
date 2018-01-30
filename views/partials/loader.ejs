@@ -1,0 +1,38 @@
+<div class="loader">
+    <form name="loaderForm">
+
+        <div class="loader__input-wrapper loader__input-wrapper--url">
+            <input
+                id="loaderUrl"
+                name="url"
+                class="loader__input js-io>"
+                data-url=""
+                type="text">
+
+            <label for="url" class="loader__input-overlay">
+                <span class="loader__input-label" data-label="Enter URL">Enter URL</span>
+            </label>
+        </div>
+
+        <div class="loader__input-wrapper loader__input-wrapper--total">
+            <input
+                id="loaderTotal"
+                name="total"
+                class="loader__input js-total"
+                min="1"
+                data-total=""
+                type="number>
+
+            <label for="loaderTotal" class="loader__input-overlay">
+                <span class="loader__input-label" data-label="Total">Total</span>
+            </label>
+        </div>
+
+        <div class="loader__progress js-progress" data-current="" data-chapter=""></div>
+
+        <button class="loader__btn js-dl" type="button">
+            <div class="loader__btn-text">Download</div>
+            <span class="loader__btn-progress js-progress-bar" style="width: 0%"></span>
+        </button>
+    </form>
+</div>
