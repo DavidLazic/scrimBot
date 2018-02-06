@@ -1,12 +1,12 @@
-<div class="loader">
-    <form name="loaderForm">
-
+<div class="loader module_parser">
+    <form>
         <div class="loader__input-wrapper loader__input-wrapper--url">
             <input
-                id="loaderUrl"
+                id="url"
                 name="url"
-                class="loader__input js-io>"
-                data-url=""
+                class="loader__input"
+                data-type="url"
+                data-change="change.INPUT"
                 type="text">
 
             <label for="url" class="loader__input-overlay">
@@ -16,23 +16,24 @@
 
         <div class="loader__input-wrapper loader__input-wrapper--total">
             <input
-                id="loaderTotal"
+                id="total"
                 name="total"
-                class="loader__input js-total"
+                class="loader__input"
                 min="1"
-                data-total=""
-                type="number>
+                data-type="total"
+                data-change="change.INPUT"
+                type="number">
 
-            <label for="loaderTotal" class="loader__input-overlay">
+            <label for="total" class="loader__input-overlay">
                 <span class="loader__input-label" data-label="Total">Total</span>
             </label>
         </div>
 
-        <div class="loader__progress js-progress" data-current="" data-chapter=""></div>
+        <div class="loader__progress" data-progress data-current data-chapter></div>
 
-        <button class="loader__btn js-dl" type="button">
+        <button class="loader__btn" type="button" data-submit data-action="action.DOWNLOAD">
             <div class="loader__btn-text">Download</div>
-            <span class="loader__btn-progress js-progress-bar" style="width: 0%"></span>
+            <span class="loader__btn-progress" data-progress-bar style="width: 0%"></span>
         </button>
     </form>
 </div>
