@@ -5,7 +5,7 @@
   "author": "David Lazic",
   "private": true,
   "scripts": {
-    "local": "cross-env NODE_ENV=local nodemon ./bin/www --ignore src dist",
+    "local": "cross-env NODE_ENV=local NODE_PATH=. nodemon ./bin/www --ignore src dist",
     "lint": "eslint src -f table --ext .js"
   },
   "repository": {
@@ -18,7 +18,9 @@
     "debug": "~2.6.9",
     "ejs": "^2.5.7",
     "express": "~4.15.5",
+    "jsdom": "^11.6.2",
     "morgan": "~1.9.0",
+    "node-fetch": "^2.0.0",
     "socket.io": "^2.0.4",
     "valid-url": "^1.0.9",
     "whatwg-fetch": "^2.0.3"

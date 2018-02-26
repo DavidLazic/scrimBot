@@ -7,7 +7,7 @@ module.exports = io => {
     io.on('connection', socket => {
         console.log('Socket connected');
 
-        socket.on(CONFIG.events.CHAPTER_DOWNLOAD, req => ChapterController.handle(socket, req));
+        socket.on(CONFIG.events.CHAPTER_DOWNLOAD, req => ChapterController(socket, req));
     });
 
     io.on('error', error =>

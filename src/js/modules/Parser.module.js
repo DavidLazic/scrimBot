@@ -51,16 +51,8 @@ export default class Parser extends Component {
     }
 
     onDownload () {
-        return this.setState({ active: true })
-            .then(() => this.state.url
-                && this.services.socket.emit(CONSTANTS.events.CHAPTER_DOWNLOAD, this.state));
-    }
-
-    onProgress () {
-        // this.el.progress
-        //     .attr('data-current', response.current + '/' + response.total)
-        //     .attr('data-chapter', response.chapter + '/' + response.max);
-        // this.el.progressBar.css('width', response.progress + '%');
+        return this.state.url && this.setState({ active: true })
+            .then(() => this.services.socket.emit(CONSTANTS.events.CHAPTER_DOWNLOAD, this.state));
     }
 
     onResponse (prop) {

@@ -10,4 +10,5 @@ package-lock.json
 .DS_Store
 .vagrant/
 dist/
+export/
 app/config/index.js
